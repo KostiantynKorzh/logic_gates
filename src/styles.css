@@ -1,0 +1,60 @@
+.drag {
+    width: 25%;
+    min-height: 6.5em;
+    margin: 1rem 0 0 1rem;
+    background-color: #29e;
+    color: white;
+    border-radius: 0.75em;
+    padding: 4%;
+    touch-action: none;
+    user-select: none;
+    transform: translate(0px, 0px);
+}
+
+.animated-path {
+    width: 300px;
+    height: 50px;
+    background-image: repeating-linear-gradient(-45deg, rgba(255,92,34,1), rgba(255,92,34,1) 25px, rgba(255,208,37,1) 25px, rgba(255,208,37,1) 50px);
+    -webkit-animation: progress 2s linear infinite;
+    -moz-animation: progress 2s linear infinite;
+    -ms-animation: progress 2s linear infinite;
+    animation: progress 2s linear infinite;
+    background-size: 150% 100%;
+}
+
+
+@-webkit-keyframes progress {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -75px 0px;
+    }
+}
+
+@-moz-keyframes progress {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -75px 0px;
+    }
+}
+
+@-ms-keyframes progress {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -75px 0px;
+    }
+}
+
+@keyframes progress {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -70px 0px;
+    }
+}
