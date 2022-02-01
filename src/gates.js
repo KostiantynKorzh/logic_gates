@@ -167,4 +167,12 @@ function toggleSwitches() {
 
 function mouseClicked() {
     toggleSwitches();
+    logicGates.forEach(gate => {
+        if (mouseVector.dist(createVector(gate.p.x + gate.firstInputCircleOffsetX, gate.p.y + gate.firstInputCircleOffsetY)) < 10) {
+            gate.firstInput = undefined;
+        }
+        if (mouseVector.dist(createVector(gate.p.x + gate.secondInputCircleOffsetX, gate.p.y + gate.secondInputCircleOffsetY)) < 10) {
+            gate.secondInput = undefined;
+        }
+    })
 }
