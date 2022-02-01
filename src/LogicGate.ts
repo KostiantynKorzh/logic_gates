@@ -11,7 +11,7 @@ abstract class LogicGate {
         this.name = "";
         this.p = createVector(x, y);
         this.output = undefined;
-        this.width = 100
+        this.width = 115;
         this.height = 70;
     }
 
@@ -66,7 +66,7 @@ abstract class DoubleInputLogicGate extends LogicGate {
         }
         circle(x + this.width, y + this.height / 2, 10);
         fill("black");
-        textSize(32);
+        textSize(28);
         fill("red");
         text(this.name, this.p.x + this.width / 6, this.p.y + 3 * this.height / 5);
     }
@@ -88,6 +88,21 @@ class AndLogicGate extends DoubleInputLogicGate {
 
 }
 
+class NandLogicGate extends DoubleInputLogicGate {
+
+    constructor(x: any, y: any) {
+        super(x, y);
+        this.name = "NAND";
+    }
+
+    calculateOutput() {
+        if (this.firstInput !== undefined && this.secondInput !== undefined) {
+            this.output = !(this.firstInput.output == this.secondInput.output && this.firstInput.output == 1);
+        }
+    }
+
+}
+
 class OrLogicGate extends DoubleInputLogicGate {
 
     constructor(x: any, y: any) {
@@ -98,6 +113,48 @@ class OrLogicGate extends DoubleInputLogicGate {
     calculateOutput(): void {
         if (this.firstInput !== undefined && this.secondInput !== undefined) {
             this.output = this.firstInput.output || this.secondInput.output;
+        }
+    }
+}
+
+class NorLogicGate extends DoubleInputLogicGate {
+
+    constructor(x: any, y: any) {
+        super(x, y);
+        this.name = "NOR";
+    }
+
+    calculateOutput(): void {
+        if (this.firstInput !== undefined && this.secondInput !== undefined) {
+            this.output = this.firstInput.output == this.secondInput.output && this.firstInput.output == 0;
+        }
+    }
+}
+
+class XorLogicGate extends DoubleInputLogicGate {
+
+    constructor(x: any, y: any) {
+        super(x, y);
+        this.name = "XOR";
+    }
+
+    calculateOutput(): void {
+        if (this.firstInput !== undefined && this.secondInput !== undefined) {
+            this.output = this.firstInput.output != this.secondInput.output;
+        }
+    }
+}
+
+class XnorLogicGate extends DoubleInputLogicGate {
+
+    constructor(x: any, y: any) {
+        super(x, y);
+        this.name = "XNOR";
+    }
+
+    calculateOutput(): void {
+        if (this.firstInput !== undefined && this.secondInput !== undefined) {
+            this.output = this.firstInput.output == this.secondInput.output;
         }
     }
 }

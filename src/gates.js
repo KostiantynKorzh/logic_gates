@@ -1,11 +1,23 @@
 // ------------------------------- SETUP -------------------------------
 
 const initGates = () => {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i <1; i++) {
         logicGates.push(new AndLogicGate(random(width), random(height)));
     }
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 1; i++) {
         logicGates.push(new OrLogicGate(random(width), random(height)));
+    }
+    for (let i = 0; i < 1; i++) {
+        logicGates.push(new NorLogicGate(random(width), random(height)));
+    }
+    for (let i = 0; i < 1; i++) {
+        logicGates.push(new XorLogicGate(random(width), random(height)));
+    }
+    for (let i = 0; i < 1; i++) {
+        logicGates.push(new NandLogicGate(random(width), random(height)));
+    }
+    for (let i = 0; i < 1; i++) {
+        logicGates.push(new XnorLogicGate(random(width), random(height)));
     }
 }
 
