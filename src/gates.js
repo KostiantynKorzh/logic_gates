@@ -2,10 +2,10 @@
 
 const initGates = () => {
     for (let i = 0; i < 3; i++) {
-        logicGates.push(new AndLogicGate(random(width), random(height), AND_OUTPUT_CIRCLE_OFFSET_X, AND_OUTPUT_CIRCLE_OFFSET_Y, -5, -60, -5, -20));
+        logicGates.push(new AndLogicGate(random(width), random(height)));
     }
     for (let i = 0; i < 3; i++) {
-        logicGates.push(new OrLogicGate(random(width), random(height), OR_OUTPUT_CIRCLE_OFFSET_X, OR_OUTPUT_CIRCLE_OFFSET_Y, -5, 25, -5, 75));
+        logicGates.push(new OrLogicGate(random(width), random(height)));
     }
 }
 
@@ -45,29 +45,31 @@ function drawResultSwitch() {
 
 function drawConnections() {
     logicGates.forEach(gate => {
+        strokeWeight(4);
         if (gate.firstInput !== undefined) {
             if (gate.firstInput instanceof Switch) {
                 stroke(126);
-                line(gate.p.x + gate.firstInputCircleOffsetX, gate.p.y + gate.firstInputCircleOffsetY, gate.firstInput.p.x, gate.firstInput.p.y);
+                line(gate.p.x, gate.p.y + gate.height / 5, gate.firstInput.p.x, gate.firstInput.p.y);
             } else {
                 stroke(126);
-                line(gate.p.x + gate.firstInputCircleOffsetX, gate.p.y + gate.firstInputCircleOffsetY, gate.firstInput.p.x + gate.firstInput.outputCircleOffsetX, gate.firstInput.p.y + gate.firstInput.outputCircleOffsetY);
+                line(gate.p.x, gate.p.y + gate.height / 5, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
             }
         }
         if (gate.secondInput !== undefined) {
             if (gate.secondInput instanceof Switch) {
                 stroke(126);
-                line(gate.p.x + gate.secondInputCircleOffsetX, gate.p.y + gate.secondInputCircleOffsetY, gate.secondInput.p.x, gate.secondInput.p.y);
+                line(gate.p.x, gate.p.y + 4 * gate.height / 5, gate.secondInput.p.x, gate.secondInput.p.y);
             } else {
                 stroke(126);
-                line(gate.p.x + gate.secondInputCircleOffsetX, gate.p.y + gate.secondInputCircleOffsetY, gate.secondInput.p.x + gate.secondInput.outputCircleOffsetX, gate.secondInput.p.y + gate.secondInput.outputCircleOffsetY);
+                line(gate.p.x, gate.p.y + 4 * gate.height / 5, gate.secondInput.p.x + gate.secondInput.width, gate.secondInput.p.y + gate.secondInput.height / 2);
             }
         }
     })
     if (resultSwitch.from.p) {
         stroke(126);
-        line(resultSwitch.from.p.x + resultSwitch.from.outputCircleOffsetX, resultSwitch.from.p.y + resultSwitch.from.outputCircleOffsetY, resultSwitch.p.x, resultSwitch.p.y);
+        line(resultSwitch.from.p.x + resultSwitch.from.width, resultSwitch.from.p.y + resultSwitch.from.height / 2, resultSwitch.p.x, resultSwitch.p.y);
     }
+    strokeWeight(1);
 }
 
 function draw() {
@@ -95,7 +97,7 @@ function draw() {
     }
     if (isCreatingConnectionFromGateOutput) {
         stroke(126);
-        line(from.p.x + from.outputCircleOffsetX, from.p.y + from.outputCircleOffsetY, mouseX, mouseY);
+        line(from.p.x + from.width, from.p.y + from.height / 2, mouseX, mouseY);
     }
     for (let c of logicGates) {
         if (c == grabbed) fill(50); else if (c == hover) fill(100); else fill(0);
@@ -150,7 +152,7 @@ function mousePressed() {
         }
     }
     logicGates.forEach(gate => {
-        if (mouseVector.dist(createVector(gate.p.x + gate.outputCircleOffsetX, gate.p.y + gate.outputCircleOffsetY)) < 10) {
+        if (mouseVector.dist(createVector(gate.p.x + gate.width, gate.p.y + gate.height / 2)) < 10) {
             from = gate;
             isCreatingConnectionFromGateOutput = true;
         }
@@ -168,10 +170,10 @@ function toggleSwitches() {
 function mouseClicked() {
     toggleSwitches();
     logicGates.forEach(gate => {
-        if (mouseVector.dist(createVector(gate.p.x + gate.firstInputCircleOffsetX, gate.p.y + gate.firstInputCircleOffsetY)) < 10) {
+        if (mouseVector.dist(createVector(gate.p.x, gate.p.y + gate.height / 5)) < 10) {
             gate.firstInput = undefined;
         }
-        if (mouseVector.dist(createVector(gate.p.x + gate.secondInputCircleOffsetX, gate.p.y + gate.secondInputCircleOffsetY)) < 10) {
+        if (mouseVector.dist(createVector(gate.p.x, gate.p.y + 4 * gate.height / 5)) < 10) {
             gate.secondInput = undefined;
         }
     })

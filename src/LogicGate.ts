@@ -1,27 +1,18 @@
 abstract class LogicGate {
     id: any;
+    name: string;
     p: any;
     output: boolean;
-    outputCircleOffsetX: number;
-    outputCircleOffsetY: number;
-    firstInputCircleOffsetX: number;
-    firstInputCircleOffsetY: number;
-    secondInputCircleOffsetX: number;
-    secondInputCircleOffsetY: number;
-    shape: any;
+    width: number;
+    height: number;
 
-
-    constructor(x: any, y: any, outputCircleOffsetX: number, outputCircleOffsetY: number, firstInputCircleOffsetX: number, firstInputCircleOffsetY: number, secondInputCircleOffsetX: number, secondInputCircleOffsetY: number, shape: any) {
+    constructor(x: any, y: any) {
         this.id = random(10000);
+        this.name = "";
         this.p = createVector(x, y);
         this.output = undefined;
-        this.outputCircleOffsetX = outputCircleOffsetX;
-        this.outputCircleOffsetY = outputCircleOffsetY;
-        this.firstInputCircleOffsetX = firstInputCircleOffsetX;
-        this.firstInputCircleOffsetY = firstInputCircleOffsetY;
-        this.secondInputCircleOffsetX = secondInputCircleOffsetX;
-        this.secondInputCircleOffsetY = secondInputCircleOffsetY;
-        this.shape = shape;
+        this.width = 100
+        this.height = 70;
     }
 
     abstract draw(): void;
@@ -34,18 +25,59 @@ abstract class DoubleInputLogicGate extends LogicGate {
     secondInput: any;
 
 
-    constructor(x: any, y: any, outputCircleOffsetX: number, outputCircleOffsetY: number, firstInputCircleOffsetX: number, firstInputCircleOffsetY: number, secondInputCircleOffsetX: number, secondInputCircleOffsetY: number, shape: any) {
-        super(x, y, outputCircleOffsetX, outputCircleOffsetY, firstInputCircleOffsetX, firstInputCircleOffsetY, secondInputCircleOffsetX, secondInputCircleOffsetY, shape);
+    constructor(x: any, y: any) {
+        super(x, y);
     }
+
+    draw() {
+        fill("black");
+        const x = this.p.x;
+        const y = this.p.y;
+        rect(x, y, this.width, this.height);
+        if (this.firstInput !== undefined) {
+            if (this.firstInput.output === undefined) {
+                fill("black");
+            } else if (this.firstInput.output === false) {
+                fill("red");
+            } else {
+                fill("green");
+            }
+        }
+        circle(x, y + this.height / 5, 10);
+        fill("black");
+        if (this.secondInput !== undefined) {
+            if (this.secondInput.output === undefined) {
+                fill("black");
+            } else if (this.secondInput.output === false) {
+                fill("red");
+            } else {
+                fill("green");
+            }
+        }
+        circle(x, y + 4 * this.height / 5, 10);
+        fill("black");
+        this.calculateOutput();
+        if (this.output !== undefined) {
+            if (this.output) {
+                fill("green");
+            } else {
+                fill("red");
+            }
+        }
+        circle(x + this.width, y + this.height / 2, 10);
+        fill("black");
+        textSize(32);
+        fill("red");
+        text(this.name, this.p.x + this.width / 6, this.p.y + 3 * this.height / 5);
+    }
+
 }
 
 class AndLogicGate extends DoubleInputLogicGate {
 
-    constructor(x: any, y: any, outputCircleOffsetX: number, outputCircleOffsetY: number, firstInputCircleOffsetX: number, firstInputCircleOffsetY: number, secondInputCircleOffsetX: number, secondInputCircleOffsetY: number) {
-        super(x, y, outputCircleOffsetX, outputCircleOffsetY, firstInputCircleOffsetX, firstInputCircleOffsetY, secondInputCircleOffsetX, secondInputCircleOffsetY,
-            ()=>{
-
-            });
+    constructor(x: any, y: any) {
+        super(x, y);
+        this.name = "AND";
     }
 
     calculateOutput() {
@@ -54,55 +86,13 @@ class AndLogicGate extends DoubleInputLogicGate {
         }
     }
 
-    draw(): void {
-        fill("black");
-        const x = this.p.x;
-        const y = this.p.y;
-        beginShape();
-        vertex(x, y);
-        vertex(x + 80, y - 40);
-        vertex(x, y - 80);
-        if (this.firstInput !== undefined) {
-            if (this.firstInput.output === undefined) {
-                fill("black");
-            } else if (this.firstInput.output === false) {
-                fill("red");
-            } else {
-                fill("green");
-            }
-        }
-        circle(x + this.firstInputCircleOffsetX, y + this.firstInputCircleOffsetY, 10);
-        fill("black");
-        if (this.secondInput !== undefined) {
-            if (this.secondInput.output === undefined) {
-                fill("black");
-            } else if (this.secondInput.output === false) {
-                fill("red");
-            } else {
-                fill("green");
-            }
-        }
-        circle(x + this.secondInputCircleOffsetX, y + this.secondInputCircleOffsetY, 10);
-        fill("black");
-        this.calculateOutput();
-        endShape(CLOSE);
-        if (this.output !== undefined) {
-            if (this.output) {
-                fill("green");
-            } else {
-                fill("red");
-            }
-        }
-        circle(x + this.outputCircleOffsetX, y + this.outputCircleOffsetY, 10);
-        fill("black");
-    }
-
 }
 
 class OrLogicGate extends DoubleInputLogicGate {
 
-    constructor(x: any, y: any, outputCircleOffsetX: number, outputCircleOffsetY: number, firstInputCircleOffsetX: number, firstInputCircleOffsetY: number, secondInputCircleOffsetX: number, secondInputCircleOffsetY: number, firstInput: any, secondInput: any) {
-        super(x, y, outputCircleOffsetX, outputCircleOffsetY, firstInputCircleOffsetX, firstInputCircleOffsetY, secondInputCircleOffsetX, secondInputCircleOffsetY, firstInput, secondInput);
+    constructor(x: any, y: any) {
+        super(x, y);
+        this.name = "OR";
     }
 
     calculateOutput(): void {
@@ -110,45 +100,4 @@ class OrLogicGate extends DoubleInputLogicGate {
             this.output = this.firstInput.output || this.secondInput.output;
         }
     }
-
-    draw(): void {
-        fill("black");
-        const x = this.p.x;
-        const y = this.p.y;
-        rect(x, y, 100, 100);
-        if (this.firstInput !== undefined) {
-            if (this.firstInput.output === undefined) {
-                fill("black");
-            } else if (this.firstInput.output === false) {
-                fill("red");
-            } else {
-                fill("green");
-            }
-        }
-        circle(x + this.firstInputCircleOffsetX, y + this.firstInputCircleOffsetY, 10);
-        fill("black");
-        if (this.secondInput !== undefined) {
-            if (this.secondInput.output === undefined) {
-                fill("black");
-            } else if (this.secondInput.output === false) {
-                fill("red");
-            } else {
-                fill("green");
-            }
-        }
-        circle(x + this.secondInputCircleOffsetX, y + this.secondInputCircleOffsetY, 10);
-        fill("black");
-        this.calculateOutput();
-        endShape(CLOSE);
-        if (this.output !== undefined) {
-            if (this.output) {
-                fill("green");
-            } else {
-                fill("red");
-            }
-        }
-        circle(x + this.outputCircleOffsetX, y + this.outputCircleOffsetY, 10);
-        fill("black");
-    }
-
 }
