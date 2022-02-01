@@ -46,30 +46,62 @@ function drawResultSwitch() {
 function drawConnections() {
     logicGates.forEach(gate => {
         strokeWeight(4);
+        stroke(126);
         if (gate.firstInput !== undefined) {
             if (gate.firstInput instanceof Switch) {
-                stroke(126);
+                if(gate.firstInput.output!==undefined){
+                    if(gate.firstInput.output){
+                        stroke("green");
+                    }else{
+                        stroke("red");
+                    }
+                }
                 line(gate.p.x, gate.p.y + gate.height / 5, gate.firstInput.p.x, gate.firstInput.p.y);
             } else {
-                stroke(126);
+                if(gate.firstInput.output!==undefined){
+                    if(gate.firstInput.output){
+                        stroke("green");
+                    }else{
+                        stroke("red");
+                    }
+                }
                 line(gate.p.x, gate.p.y + gate.height / 5, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
             }
         }
         if (gate.secondInput !== undefined) {
             if (gate.secondInput instanceof Switch) {
-                stroke(126);
+                if(gate.secondInput.output!==undefined){
+                    if(gate.secondInput.output){
+                        stroke("green");
+                    }else{
+                        stroke("red");
+                    }
+                }
                 line(gate.p.x, gate.p.y + 4 * gate.height / 5, gate.secondInput.p.x, gate.secondInput.p.y);
             } else {
-                stroke(126);
+                if(gate.secondInput.output!==undefined){
+                    if(gate.secondInput.output){
+                        stroke("green");
+                    }else{
+                        stroke("red");
+                    }
+                }
                 line(gate.p.x, gate.p.y + 4 * gate.height / 5, gate.secondInput.p.x + gate.secondInput.width, gate.secondInput.p.y + gate.secondInput.height / 2);
             }
         }
     })
     if (resultSwitch.from.p) {
-        stroke(126);
+        if(resultSwitch.from.output!==undefined){
+            if(resultSwitch.from.output){
+                stroke("green");
+            }else{
+                stroke("red");
+            }
+        }
         line(resultSwitch.from.p.x + resultSwitch.from.width, resultSwitch.from.p.y + resultSwitch.from.height / 2, resultSwitch.p.x, resultSwitch.p.y);
     }
     strokeWeight(1);
+    stroke(126);
 }
 
 function draw() {
