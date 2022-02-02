@@ -1,24 +1,30 @@
 // ------------------------------- SETUP -------------------------------
 
 const initGates = () => {
-    for (let i = 0; i <1; i++) {
+    for (let i = 0; i < 1; i++) {
         logicGates.push(new AndLogicGate(random(width), random(height)));
     }
     for (let i = 0; i < 1; i++) {
-        logicGates.push(new OrLogicGate(random(width), random(height)));
+        logicGates.push(new BufferLogicGate(random(width), random(height)));
     }
     for (let i = 0; i < 1; i++) {
-        logicGates.push(new NorLogicGate(random(width), random(height)));
+        logicGates.push(new NotLogicGate(random(width), random(height)));
     }
-    for (let i = 0; i < 1; i++) {
-        logicGates.push(new XorLogicGate(random(width), random(height)));
-    }
-    for (let i = 0; i < 1; i++) {
-        logicGates.push(new NandLogicGate(random(width), random(height)));
-    }
-    for (let i = 0; i < 1; i++) {
-        logicGates.push(new XnorLogicGate(random(width), random(height)));
-    }
+    // for (let i = 0; i < 1; i++) {
+    //     logicGates.push(new OrLogicGate(random(width), random(height)));
+    // }
+    // for (let i = 0; i < 1; i++) {
+    //     logicGates.push(new NorLogicGate(random(width), random(height)));
+    // }
+    // for (let i = 0; i < 1; i++) {
+    //     logicGates.push(new XorLogicGate(random(width), random(height)));
+    // }
+    // for (let i = 0; i < 1; i++) {
+    //     logicGates.push(new NandLogicGate(random(width), random(height)));
+    // }
+    // for (let i = 0; i < 1; i++) {
+    //     logicGates.push(new XnorLogicGate(random(width), random(height)));
+    // }
 }
 
 const initSwitches = () => {
@@ -59,42 +65,46 @@ function drawConnections() {
     logicGates.forEach(gate => {
         strokeWeight(4);
         stroke(126);
+        let firstInputCircleHeight = gate.height / 5;
+        if (gate instanceof SingleInputLogicGate) {
+            firstInputCircleHeight = gate.height / 2;
+        }
         if (gate.firstInput !== undefined) {
             if (gate.firstInput instanceof Switch) {
-                if(gate.firstInput.output!==undefined){
-                    if(gate.firstInput.output){
+                if (gate.firstInput.output !== undefined) {
+                    if (gate.firstInput.output) {
                         stroke("green");
-                    }else{
+                    } else {
                         stroke("red");
                     }
                 }
-                line(gate.p.x, gate.p.y + gate.height / 5, gate.firstInput.p.x, gate.firstInput.p.y);
+                line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.firstInput.p.x, gate.firstInput.p.y);
             } else {
-                if(gate.firstInput.output!==undefined){
-                    if(gate.firstInput.output){
+                if (gate.firstInput.output !== undefined) {
+                    if (gate.firstInput.output) {
                         stroke("green");
-                    }else{
+                    } else {
                         stroke("red");
                     }
                 }
-                line(gate.p.x, gate.p.y + gate.height / 5, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
+                line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
             }
         }
         if (gate.secondInput !== undefined) {
             if (gate.secondInput instanceof Switch) {
-                if(gate.secondInput.output!==undefined){
-                    if(gate.secondInput.output){
+                if (gate.secondInput.output !== undefined) {
+                    if (gate.secondInput.output) {
                         stroke("green");
-                    }else{
+                    } else {
                         stroke("red");
                     }
                 }
                 line(gate.p.x, gate.p.y + 4 * gate.height / 5, gate.secondInput.p.x, gate.secondInput.p.y);
             } else {
-                if(gate.secondInput.output!==undefined){
-                    if(gate.secondInput.output){
+                if (gate.secondInput.output !== undefined) {
+                    if (gate.secondInput.output) {
                         stroke("green");
-                    }else{
+                    } else {
                         stroke("red");
                     }
                 }
@@ -103,10 +113,10 @@ function drawConnections() {
         }
     })
     if (resultSwitch.from.p) {
-        if(resultSwitch.from.output!==undefined){
-            if(resultSwitch.from.output){
+        if (resultSwitch.from.output !== undefined) {
+            if (resultSwitch.from.output) {
                 stroke("green");
-            }else{
+            } else {
                 stroke("red");
             }
         }
@@ -164,7 +174,7 @@ function mouseReleased() {
             if (from.id) {
                 if (gate.firstInput === undefined) {
                     gate.firstInput = from;
-                } else {
+                } else if (gate instanceof DoubleInputLogicGate) {
                     gate.secondInput = from;
                 }
             }
