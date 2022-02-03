@@ -6,12 +6,20 @@ import {NotLogicGate} from "./logic-gates/singleinput-gates/NotLogicGate";
 import {SingleInputLogicGate} from "./logic-gates/abstract-gates/SingleInputLogicGate";
 import {DoubleInputLogicGate} from "./logic-gates/abstract-gates/DoubleInputLogicGate";
 import {Switch} from "./Switch";
+import {OrLogicGate} from "./logic-gates/doubleinput-gates/OrLogicGate";
+import {NorLogicGate} from "./logic-gates/doubleinput-gates/NorLogicGate";
+import {XorLogicGate} from "./logic-gates/doubleinput-gates/XorLogicGate";
+import {NandLogicGate} from "./logic-gates/doubleinput-gates/NandLogicGate";
+import {XnorLogicGate} from "./logic-gates/doubleinput-gates/XnorLogicGate";
 
 const sketch = (p5: P5) => {
 
-    let hover: any;
+    let itemToDrag: any;
+    let gateToAddFromDnd: any;
     let grabbed: any;
+    let grabbedGateToAddFromDnd: any;
     let logicGates: LogicGate[];
+    let logicGatesForDndArea: LogicGate[] = [];
     let switches: Switch[];
     let from: LogicGate | Switch | {};
     let isCreatingConnectionFromSwitchToGate: boolean;
@@ -19,6 +27,8 @@ const sketch = (p5: P5) => {
     const resultSwitch: Switch = new Switch(700, 125, false, p5);
     let isInside: boolean;
     let mouseVector: P5.Vector;
+    const canvasWidth = 800;
+    const canvasHeight = 1400;
 
     // ------------------------------- SETUP -------------------------------
 
@@ -49,23 +59,38 @@ const sketch = (p5: P5) => {
         // }
     }
 
+    const initGatesForDndArea = () => {
+        const height = canvasHeight / 8;
+        logicGatesForDndArea.push(new BufferLogicGate(canvasWidth / 20, 0, p5))
+        logicGatesForDndArea.push(new NotLogicGate(canvasWidth / 20, height, p5))
+        logicGatesForDndArea.push(new AndLogicGate(canvasWidth / 20, height * 2, p5))
+        logicGatesForDndArea.push(new OrLogicGate(canvasWidth / 20, height * 3, p5))
+        logicGatesForDndArea.push(new NorLogicGate(canvasWidth / 20, height * 4, p5))
+        logicGatesForDndArea.push(new XorLogicGate(canvasWidth / 20, height * 5, p5))
+        logicGatesForDndArea.push(new NandLogicGate(canvasWidth / 20, height * 6, p5))
+        logicGatesForDndArea.push(new XnorLogicGate(canvasWidth / 20, height * 7, p5))
+    }
+
     const initSwitches = () => {
         for (let i = 0; i < 8; i++) {
-            switches.push(new Switch(30, i * 60 + 60, false, p5));
+            switches.push(new Switch(300, i * 60 + 60, false, p5));
         }
     }
 
     p5.setup = () => {
-        let hover = null;
-        let grabbed = null;
-        const d = 800;
-        p5.createCanvas(d, 600);
+        itemToDrag = null;
+        grabbed = null;
+        gateToAddFromDnd = null;
+        grabbedGateToAddFromDnd = null;
+        p5.createCanvas(canvasWidth, canvasHeight);
         p5.ellipseMode(p5.RADIUS);
         logicGates = [];
         switches = [];
         from = {};
         isCreatingConnectionFromSwitchToGate = false;
         isCreatingConnectionFromGateOutput = false;
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        initGatesForDndArea();
         initGates();
         initSwitches();
     }
@@ -90,7 +115,7 @@ const sketch = (p5: P5) => {
             if (gate instanceof SingleInputLogicGate) {
                 firstInputCircleHeight = gate.height / 2;
             }
-            if (gate.firstInput !== undefined) {
+            if (gate.firstInput !== undefined && gate.firstInput.id) {
                 if (gate.firstInput instanceof Switch) {
                     if (gate.firstInput.output !== undefined) {
                         if (gate.firstInput.output) {
@@ -111,7 +136,7 @@ const sketch = (p5: P5) => {
                     p5.line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
                 }
             }
-            if (gate.secondInput !== undefined) {
+            if (gate.secondInput !== undefined && gate.secondInput.id) {
                 if (gate.secondInput instanceof Switch) {
                     if (gate.secondInput.output !== undefined) {
                         if (gate.secondInput.output) {
@@ -149,19 +174,32 @@ const sketch = (p5: P5) => {
 
     p5.draw = () => {
         mouseVector = p5.createVector(p5.mouseX, p5.mouseY);
-        hover = null;
+        itemToDrag = null;
+        gateToAddFromDnd = null;
         for (let gate of logicGates) {
             isInside = mouseVector.dist(gate.p) < gate.width;
             if (isInside) {
-                hover = gate;
+                itemToDrag = gate;
             }
         }
+        logicGatesForDndArea.forEach(gate => {
+            isInside = mouseVector.dist(gate.p) < gate.width;
+            if (isInside) {
+                gateToAddFromDnd = gate;
+            }
+        })
         p5.background("white");
         p5.noStroke();
+        p5.fill("gray");
+        p5.rect(0, 0, canvasWidth / 4, canvasHeight);
+        logicGatesForDndArea.forEach(gate => {
+            gate.draw();
+        });
         drawConnections();
         drawSwitches();
         drawResultSwitch();
-        if (hover) p5.cursor("grab"); else p5.cursor(p5.ARROW);
+        console.log(logicGates)
+        if (itemToDrag) p5.cursor("grab"); else p5.cursor(p5.ARROW);
         if (from instanceof LogicGate) {
             if (isCreatingConnectionFromGateOutput) {
                 p5.stroke(126);
@@ -174,9 +212,14 @@ const sketch = (p5: P5) => {
             }
         }
         for (let c of logicGates) {
-            if (c == grabbed) p5.fill(50); else if (c == hover) p5.fill(100); else p5.fill(0);
+            if (c == grabbed) p5.fill(50); else if (c == itemToDrag) p5.fill(100); else p5.fill(0);
             c.draw();
         }
+        logicGatesForDndArea.forEach(gate => {
+            if (mouseVector.dist(p5.createVector(gate.p.x + gate.width, gate.p.y + gate.height / 2)) < 10) {
+                gate.draw();
+            }
+        })
     }
 
 // ------------------------------- EVENTS -------------------------------
@@ -199,6 +242,7 @@ const sketch = (p5: P5) => {
             resultSwitch.from = from;
         }
         grabbed = null;
+        grabbedGateToAddFromDnd = null;
         isCreatingConnectionFromSwitchToGate = false;
         isCreatingConnectionFromGateOutput = false;
         from = {};
@@ -210,45 +254,71 @@ const sketch = (p5: P5) => {
         }
     }
 
+    const removeGate = () => {
+        const gateToDelete = logicGates.find(gate => {
+            if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y)) < 80) {
+                return gate;
+            }
+        });
+        if (gateToDelete) {
+            const index = logicGates.findIndex((gate: any) => {
+                return gate.id === gateToDelete.id
+            })
+            if (index !== -1) {
+                // logicGates[index] = undefined;
+                logicGates.splice(index, 1);
+                // logicGates = [...logicGates.splice(index, 1)];
+            }
+        }
+    }
+
     p5.mousePressed = () => {
-        if (hover) {
-            grabbed = hover;
+        if (p5.mouseButton === p5.RIGHT) {
+            removeGate();
+        } else {
+            if (itemToDrag) {
+                grabbed = itemToDrag;
+            }
+            if (gateToAddFromDnd) {
+                const newGate = new gateToAddFromDnd.constructor(gateToAddFromDnd.p.x, gateToAddFromDnd.p.y, p5);
+                logicGates.push(newGate);
+                grabbed = newGate;
+            }
+            for (let currentSwitch of switches) {
+                if (mouseVector.dist(currentSwitch.p) < currentSwitch.r) {
+                    from = currentSwitch;
+                    isCreatingConnectionFromSwitchToGate = true;
+                }
+            }
+            logicGates.forEach(gate => {
+                if (mouseVector.dist(p5.createVector(gate.p.x + gate.width, gate.p.y + gate.height / 2)) < 10) {
+                    from = gate;
+                    isCreatingConnectionFromGateOutput = true;
+                }
+            })
         }
-        for (let currentSwitch of switches) {
-            if (mouseVector.dist(currentSwitch.p) < currentSwitch.r) {
-                console.log("YES")
-                from = currentSwitch;
-                isCreatingConnectionFromSwitchToGate = true;
+
+        function toggleSwitches() {
+            for (let currentSwitch of switches) {
+                if (mouseVector.dist(currentSwitch.p) < currentSwitch.r) {
+                    currentSwitch.output = !currentSwitch.output;
+                }
             }
         }
-        logicGates.forEach(gate => {
-            if (mouseVector.dist(p5.createVector(gate.p.x + gate.width, gate.p.y + gate.height / 2)) < 10) {
-                from = gate;
-                isCreatingConnectionFromGateOutput = true;
-            }
-        })
-    }
 
-    function toggleSwitches() {
-        for (let currentSwitch of switches) {
-            if (mouseVector.dist(currentSwitch.p) < currentSwitch.r) {
-                currentSwitch.output = !currentSwitch.output;
-            }
+        p5.mouseClicked = () => {
+            toggleSwitches();
+            logicGates.forEach(gate => {
+                if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + gate.height / 5)) < 10) {
+                    gate.firstInput = undefined;
+                }
+                if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + 4 * gate.height / 5)) < 10) {
+                    gate.secondInput = undefined;
+                }
+            })
         }
-    }
 
-    p5.mouseClicked = () => {
-        toggleSwitches();
-        logicGates.forEach(gate => {
-            if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + gate.height / 5)) < 10) {
-                gate.firstInput = undefined;
-            }
-            if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + 4 * gate.height / 5)) < 10) {
-                gate.secondInput = undefined;
-            }
-        })
     }
-
 }
 
 new P5(sketch);

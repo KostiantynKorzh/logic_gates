@@ -1,7 +1,7 @@
 import P5 from "p5";
 import {DoubleInputLogicGate} from "../abstract-gates/DoubleInputLogicGate";
 
-class XnorLogicGate extends DoubleInputLogicGate {
+export class XnorLogicGate extends DoubleInputLogicGate {
 
     constructor(x: any, y: any, p5: P5) {
         super(x, y, p5);
