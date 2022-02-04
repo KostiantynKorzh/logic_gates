@@ -4,6 +4,7 @@ import {LogicGate} from "../logic-gates/abstract-gates/LogicGate";
 import P5 from "p5";
 import {p5} from "..";
 import {isInsideGate} from "../utils";
+import {LOGIC_GATE_WIDTH} from "../constants";
 
 export const drawSwitches = (switches: Switch[]) => {
     for (let currentSwitch of switches) {
@@ -95,9 +96,9 @@ export const resetCanvas = () => {
     p5.noStroke();
 }
 
-export const drawNewGateArea = (canvasWidth: number, canvasHeight: number, logicGatesFromNewGateArea: LogicGate[]) => {
+export const drawNewGateArea = (canvasHeight: number, logicGatesFromNewGateArea: LogicGate[]) => {
     p5.fill("gray");
-    p5.rect(0, 0, canvasWidth / 4, canvasHeight);
+    p5.rect(0, 0, LOGIC_GATE_WIDTH + 50, canvasHeight);
     logicGatesFromNewGateArea.forEach(gate => {
         gate.draw();
     });

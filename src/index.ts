@@ -13,7 +13,7 @@ import {
     getItemToDrag,
     resetCanvas
 } from "./render/drawing";
-import {initGatesForDndArea, initSwitches} from "./render/setup";
+import {createAddSwitchButton, initGatesForDndArea, initSwitches} from "./render/setup";
 import {
     deleteConnection,
     makeConnectionToGate,
@@ -26,6 +26,8 @@ import {
 
 const sketch = (p5: P5) => {
 
+    const canvasWidth = 1200;
+    const canvasHeight = 1400;
     let currentGateToDrag: any;
     let gateToAddFromDnd: any;
     let grabbed: any;
@@ -36,11 +38,9 @@ const sketch = (p5: P5) => {
     let from: LogicGate | Switch | {};
     let isCreatingConnectionFromSwitchToGate: boolean;
     let isCreatingConnectionFromGateOutput: boolean;
-    const resultSwitch: Switch = new Switch(700, 125, false, p5);
+    const resultSwitch: Switch = new Switch(canvasWidth - 50, 125, false, p5);
     let isInside: boolean;
     let mouseVector: P5.Vector;
-    const canvasWidth = 800;
-    const canvasHeight = 1400;
 
     // ------------------------------- SETUP -------------------------------
 
@@ -60,6 +60,7 @@ const sketch = (p5: P5) => {
         document.addEventListener('contextmenu', event => event.preventDefault()); // to remove browser right click for custom right click
         initGatesForDndArea(canvasWidth, canvasHeight, logicGatesFromNewGateArea);
         initSwitches(switches);
+        createAddSwitchButton(switches);
     }
 
 // ------------------------------- RENDER -------------------------------
@@ -71,7 +72,7 @@ const sketch = (p5: P5) => {
         p5.cursor(p5.ARROW);
         currentGateToDrag = getItemToDrag(logicGates, isInside, mouseVector);
         gateToAddFromDnd = getItemToDrag(logicGatesFromNewGateArea, isInside, mouseVector);
-        drawNewGateArea(canvasWidth, canvasHeight, logicGatesFromNewGateArea);
+        drawNewGateArea(canvasHeight, logicGatesFromNewGateArea);
         drawConnections(logicGates, resultSwitch);
         drawSwitches(switches);
         drawResultSwitch(resultSwitch);

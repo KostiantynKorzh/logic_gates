@@ -1,4 +1,5 @@
 import P5 from "p5";
+import {LOGIC_GATE_HEIGHT, LOGIC_GATE_WIDTH} from "../../constants";
 
 export abstract class LogicGate {
     id: any;
@@ -17,8 +18,8 @@ export abstract class LogicGate {
         this.name = "";
         this.p = p5.createVector(x, y);
         this.output = undefined;
-        this.width = 115;
-        this.height = 70;
+        this.width = LOGIC_GATE_WIDTH;
+        this.height = LOGIC_GATE_HEIGHT;
     }
 
     abstract draw(): void;
