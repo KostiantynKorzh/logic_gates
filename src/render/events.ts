@@ -26,18 +26,18 @@ export const makeConnectionToResultSwitch = (resultSwitch: Switch, from: LogicGa
     }
 }
 
-export const removeGate = (logicGates: LogicGate[], mouseVector: P5.Vector) => {
-    const gateToDelete = logicGates.find(gate => {
+export const removeElement = (elements: any, mouseVector: P5.Vector) => {
+    const gateToDelete = elements.find(gate => {
         if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y)) < 80) {
             return gate;
         }
     });
     if (gateToDelete) {
-        const index = logicGates.findIndex((gate: any) => {
+        const index = elements.findIndex((gate: any) => {
             return gate.id === gateToDelete.id
         })
         if (index !== -1) {
-            logicGates.splice(index, 1);
+            elements.splice(index, 1);
         }
     }
 }
