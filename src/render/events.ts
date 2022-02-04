@@ -1,12 +1,13 @@
 import {LogicGate} from "../logic-gates/abstract-gates/LogicGate";
 import {Switch} from "../Switch";
 import {DoubleInputLogicGate} from "../logic-gates/abstract-gates/DoubleInputLogicGate";
+import {isInsideGate} from "../utils"
 import {p5} from "..";
 import P5 from "p5";
 
-export const makeConnectionToGate = (logicGates: LogicGate[], isInside: boolean,  from: LogicGate | Switch | {},mouseVector: P5.Vector) => {
+export const makeConnectionToGate = (logicGates: LogicGate[], isInside: boolean, from: LogicGate | Switch | {}, mouseVector: P5.Vector) => {
     logicGates.forEach(gate => {
-        isInside = mouseVector.dist(gate.p) < gate.width;
+        isInside = isInsideGate(mouseVector, gate);
         if (isInside && (from instanceof LogicGate || from instanceof Switch)) {
             if (from.id) {
                 if (gate.firstInput === undefined) {
@@ -60,7 +61,7 @@ export const startDrawingConnectionFromSwitch = (switches: Switch[], from: Logic
 export const startDrawingConnectionFromGate = (logicGates: LogicGate[], from: LogicGate | Switch | {}, isCreatingConnectionFromGateOutput: boolean, mouseVector: P5.Vector) => {
     for (const gate of logicGates) {
         if (mouseVector.dist(p5.createVector(gate.p.x + gate.width, gate.p.y + gate.height / 2)) < 10) {
-            return  gate;
+            return gate;
         }
     }
 }

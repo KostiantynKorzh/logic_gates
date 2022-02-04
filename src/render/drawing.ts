@@ -3,6 +3,7 @@ import {Switch} from "../Switch";
 import {LogicGate} from "../logic-gates/abstract-gates/LogicGate";
 import P5 from "p5";
 import {p5} from "..";
+import {isInsideGate} from "../utils";
 
 export const drawSwitches = (switches: Switch[]) => {
     for (let currentSwitch of switches) {
@@ -81,7 +82,7 @@ export const drawConnections = (logicGates: LogicGate[], resultSwitch: Switch) =
 
 export const getItemToDrag = (logicGates: LogicGate[], isInside: boolean, mouseVector: P5.Vector): LogicGate => {
     for (const gate of logicGates) {
-        isInside = mouseVector.dist(gate.p) < gate.width;
+        isInside = isInsideGate(mouseVector, gate);
         if (isInside) {
             p5.cursor("grab");
             return gate;
