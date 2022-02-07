@@ -11,6 +11,8 @@ export class NotLogicGate extends SingleInputLogicGate {
     calculateOutput() {
         if (this.firstInput !== undefined) {
             this.output = !this.firstInput.output;
+        } else {
+            this.output = undefined;
         }
     }
 }

@@ -11,6 +11,8 @@ export class OrLogicGate extends DoubleInputLogicGate {
     calculateOutput(): void {
         if (this.firstInput !== undefined && this.secondInput !== undefined) {
             this.output = this.firstInput.output || this.secondInput.output;
+        } else {
+            this.output = undefined;
         }
     }
 }

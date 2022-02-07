@@ -9,7 +9,7 @@ export const makeConnectionToGate = (logicGates: LogicGate[], isInside: boolean,
     logicGates.forEach(gate => {
         isInside = isInsideGate(mouseVector, gate);
         if (isInside && (from instanceof LogicGate || from instanceof Switch)) {
-            if (from.id) {
+            if (from.id && from.id !== gate.id) {
                 if (gate.firstInput === undefined) {
                     gate.firstInput = from;
                 } else if (gate instanceof DoubleInputLogicGate) {
@@ -77,11 +77,17 @@ export const toggleSwitches = (switches: Switch[], mouseVector: P5.Vector) => {
 
 export const deleteConnection = (logicGates: LogicGate[], mouseVector: P5.Vector) => {
     logicGates.forEach(gate => {
-        if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + gate.height / 5)) < 10) {
-            gate.firstInput = undefined;
-        }
-        if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + 4 * gate.height / 5)) < 10) {
-            gate.secondInput = undefined;
+        if (gate instanceof DoubleInputLogicGate) {
+            if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + gate.height / 5)) < 10) {
+                gate.firstInput = undefined;
+            }
+            if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + 4 * gate.height / 5)) < 10) {
+                gate.secondInput = undefined;
+            }
+        } else {
+            if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y + gate.height / 2)) < 10) {
+                gate.firstInput = undefined;
+            }
         }
     });
 }

@@ -11,6 +11,8 @@ export class AndLogicGate extends DoubleInputLogicGate {
     calculateOutput() {
         if (this.firstInput !== undefined && this.secondInput !== undefined) {
             this.output = this.firstInput.output && this.secondInput.output;
+        } else {
+            this.output = undefined;
         }
     }
 

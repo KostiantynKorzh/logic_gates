@@ -11,6 +11,8 @@ export class NandLogicGate extends DoubleInputLogicGate {
     calculateOutput() {
         if (this.firstInput !== undefined && this.secondInput !== undefined) {
             this.output = !(this.firstInput.output == this.secondInput.output && this.firstInput.output == 1);
+        } else {
+            this.output = undefined;
         }
     }
 

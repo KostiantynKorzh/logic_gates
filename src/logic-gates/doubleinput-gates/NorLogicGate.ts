@@ -11,6 +11,8 @@ export class NorLogicGate extends DoubleInputLogicGate {
     calculateOutput(): void {
         if (this.firstInput !== undefined && this.secondInput !== undefined) {
             this.output = this.firstInput.output == this.secondInput.output && this.firstInput.output == 0;
+        } else {
+            this.output = undefined;
         }
     }
 }

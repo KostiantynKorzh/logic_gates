@@ -31,6 +31,8 @@ export abstract class SingleInputLogicGate extends LogicGate {
             } else {
                 this.p5.fill("red");
             }
+        } else {
+            this.p5.fill("black");
         }
         this.p5.circle(x + this.width, y + this.height / 2, 10);
         this.p5.fill("black");
