@@ -4,7 +4,7 @@ import {LOGIC_GATE_HEIGHT, LOGIC_GATE_WIDTH} from "../../constants";
 export abstract class LogicGate {
     id: any;
     name: string;
-    p: any;
+    p: P5.Vector;
     output: boolean | undefined;
     width: number;
     height: number;

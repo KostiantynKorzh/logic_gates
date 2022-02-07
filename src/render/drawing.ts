@@ -3,7 +3,11 @@ import {Switch} from "../Switch";
 import {LogicGate} from "../logic-gates/abstract-gates/LogicGate";
 import P5 from "p5";
 import {p5} from "..";
-import {isInsideGate} from "../utils";
+import {
+    createLineFromUpperInputToLowerOutput,
+    createLineFromUpperOutputToLowerFirstInput,
+    isInsideGate
+} from "../utils";
 import {LOGIC_GATE_WIDTH} from "../constants";
 
 export const drawSwitches = (switches: Switch[]) => {
@@ -14,6 +18,34 @@ export const drawSwitches = (switches: Switch[]) => {
 
 export const drawResultSwitch = (resultSwitch: Switch) => {
     resultSwitch.draw();
+}
+
+const drawConnectionFromGateFirstInputToGate = (gate: LogicGate, firstInputCircleHeight: number) => {
+    if (gate.p.x < gate.firstInput.p.x + LOGIC_GATE_WIDTH) {
+        if (gate.p.y + firstInputCircleHeight < gate.firstInput.p.y) {
+            createLineFromUpperInputToLowerOutput(gate.p.x, gate.p.y, gate.firstInput.p.x, gate.firstInput.p.y, firstInputCircleHeight);
+        } else if (gate.p.y + firstInputCircleHeight > gate.firstInput.p.y) {
+            createLineFromUpperOutputToLowerFirstInput(gate.p.x, gate.p.y, gate.firstInput.p.x, gate.firstInput.p.y, firstInputCircleHeight);
+        } else {
+            p5.line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
+        }
+    } else {
+        p5.line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
+    }
+}
+
+const drawConnectionFromGateSecondInputToGate = (gate: LogicGate, firstInputCircleHeight: number) => {
+    if (gate.p.x < gate.secondInput.p.x + LOGIC_GATE_WIDTH) {
+        if (gate.p.y + firstInputCircleHeight < gate.secondInput.p.y) {
+            createLineFromUpperInputToLowerOutput(gate.p.x, gate.p.y, gate.secondInput.p.x, gate.secondInput.p.y, firstInputCircleHeight);
+        } else if (gate.p.y + firstInputCircleHeight > gate.secondInput.p.y) {
+            createLineFromUpperOutputToLowerFirstInput(gate.p.x, gate.p.y, gate.secondInput.p.x, gate.secondInput.p.y, firstInputCircleHeight);
+        } else {
+            p5.line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.secondInput.p.x + gate.secondInput.width, gate.secondInput.p.y + gate.secondInput.height / 2);
+        }
+    } else {
+        p5.line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.secondInput.p.x + gate.secondInput.width, gate.secondInput.p.y + gate.secondInput.height / 2);
+    }
 }
 
 export const drawConnections = (logicGates: LogicGate[], resultSwitch: Switch) => {
@@ -42,7 +74,7 @@ export const drawConnections = (logicGates: LogicGate[], resultSwitch: Switch) =
                         p5.stroke("red");
                     }
                 }
-                p5.line(gate.p.x, gate.p.y + firstInputCircleHeight, gate.firstInput.p.x + gate.firstInput.width, gate.firstInput.p.y + gate.firstInput.height / 2);
+                drawConnectionFromGateFirstInputToGate(gate, firstInputCircleHeight);
             }
         }
         if (gate.secondInput !== undefined && gate.secondInput.id) {
@@ -63,7 +95,7 @@ export const drawConnections = (logicGates: LogicGate[], resultSwitch: Switch) =
                         p5.stroke("red");
                     }
                 }
-                p5.line(gate.p.x, gate.p.y + 4 * gate.height / 5, gate.secondInput.p.x + gate.secondInput.width, gate.secondInput.p.y + gate.secondInput.height / 2);
+                drawConnectionFromGateSecondInputToGate(gate, 4 * gate.height / 5);
             }
         }
     })
