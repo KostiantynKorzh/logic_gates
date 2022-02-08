@@ -26,19 +26,52 @@ export const makeConnectionToResultSwitch = (resultSwitch: Switch, from: LogicGa
     }
 }
 
-export const removeElement = (elements: any, mouseVector: P5.Vector) => {
-    const gateToDelete = elements.find(gate => {
+export const removeGate = (gates: LogicGate[], resultSwitch: Switch, mouseVector: P5.Vector) => {
+    const gateToDelete = gates.find(gate => {
         if (mouseVector.dist(p5.createVector(gate.p.x, gate.p.y)) < 80) {
             return gate;
         }
     });
     if (gateToDelete) {
-        const index = elements.findIndex((gate: any) => {
+        const index = gates.findIndex((gate: any) => {
             return gate.id === gateToDelete.id
         })
         if (index !== -1) {
-            elements.splice(index, 1);
+            gates.forEach(gate => {
+                if (gate.firstInput && gate.firstInput.id === gateToDelete.id) {
+                    gate.firstInput = undefined;
+                }
+                if (gate.secondInput && gate.secondInput.id === gateToDelete.id) {
+                    gate.secondInput = undefined;
+                }
+            });
+            if (resultSwitch.from && resultSwitch.from.id === gateToDelete.id) {
+                resultSwitch.from = undefined;
+            }
+            gates.splice(index, 1);
         }
+    }
+}
+
+export const removeSwitch = (switches: Switch[], gates: LogicGate[], mouseVector: P5.Vector) => {
+    const switchToDelete = switches.find(currentSwitch => {
+        if (mouseVector.dist(p5.createVector(currentSwitch.p.x, currentSwitch.p.y)) < 80) {
+            return currentSwitch;
+        }
+    });
+    if (switchToDelete) {
+        const index = switches.findIndex(currentSwitch => {
+            return currentSwitch.id === switchToDelete.id
+        })
+        gates.forEach(gate => {
+            if (gate.firstInput && gate.firstInput.id === switchToDelete.id) {
+                gate.firstInput = undefined;
+            }
+            if (gate.secondInput && gate.secondInput.id === switchToDelete.id) {
+                gate.secondInput = undefined;
+            }
+        });
+        switches.splice(index, 1);
     }
 }
 

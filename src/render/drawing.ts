@@ -99,7 +99,7 @@ export const drawConnections = (logicGates: LogicGate[], resultSwitch: Switch) =
             }
         }
     })
-    if (resultSwitch.from.p) {
+    if (resultSwitch.from && resultSwitch.from.p) {
         if (resultSwitch.from.output !== undefined) {
             if (resultSwitch.from.output) {
                 p5.stroke("green");

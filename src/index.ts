@@ -18,7 +18,8 @@ import {
     deleteConnection,
     makeConnectionToGate,
     makeConnectionToResultSwitch,
-    removeElement,
+    removeGate,
+    removeSwitch,
     startDrawingConnectionFromGate,
     startDrawingConnectionFromSwitch,
     toggleSwitches
@@ -101,8 +102,8 @@ const sketch = (p5: P5) => {
 
     p5.mousePressed = () => {
         if (p5.mouseButton === p5.RIGHT) {
-            removeElement(logicGates, mouseVector);
-            removeElement(switches, mouseVector);
+            removeGate(logicGates, resultSwitch, mouseVector);
+            removeSwitch(switches, logicGates, mouseVector);
         } else {
             if (currentGateToDrag) {
                 grabbed = currentGateToDrag;

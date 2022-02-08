@@ -8,7 +8,7 @@ export class Switch {
     from: any;
     p5: P5;
 
-    constructor(x, y, output,  p5: P5) {
+    constructor(x, y, output, p5: P5) {
         this.p5 = p5;
         this.id = this.p5.random(10000);
         this.p = this.p5.createVector(x, y);
@@ -18,7 +18,7 @@ export class Switch {
     }
 
     draw() {
-        if (this.from.output) {
+        if (this.from && this.from.output) {
             if (this.from.output) {
                 this.p5.fill("green");
             } else {
