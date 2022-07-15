@@ -27,6 +27,10 @@ To delete connection, click on gate input with connection to delete<br />
 To delete gate, right click on it<br />
 To delete input switch (on the left), right click on it <br />
 
+### How to run
+
+You can use build folder to run js or transpile ts to js by yourself
+
 ### Technologies used in this project
 
 * Typescript
