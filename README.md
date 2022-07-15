@@ -18,6 +18,8 @@ You can add different gates on playground and connect them together
 
 <img src="images_for_docs/connecting_gates.png" width="600" alt="logic gates">
 
+<img src="images_for_docs/one_more_example.png" width="600" alt="logic gates">
+
 Area on the left is a place where you can grab new gate and add it to playground<br />
 To add new input switch (on the left), click "Add switch" button<br />
 
